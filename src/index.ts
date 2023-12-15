@@ -15,8 +15,11 @@ interface Parameters {
 
 app.get('/update', async (req: Request<{}, {}, {}, Parameters>, res: Response) => {
     if (req.query.current_version && req.query.target && req.query.arch) {
-        const latest = await github();
-        if (compare(latest.tag_name, req.query.current_version, '>')) {
+        const releases = await github();
+        const latest = releases.find((release) => {
+            return release.tag_name?.startsWith(process.env.TAG_STRUCTURE);
+        });
+        if (compare(latest.tag_name.replace('app-', ''), req.query.current_version, '>')) {
             const version = process.env.TAG_STRUCTURE ? latest.tag_name.split(process.env.TAG_STRUCTURE)[1] : latest.tag_name;
             const release = getReleases(latest.assets, req.query.target, req.query.arch);
             if (Object.keys(release).length !== 0) {
@@ -26,7 +29,6 @@ app.get('/update', async (req: Request<{}, {}, {}, Parameters>, res: Response) =
             }
         } else {
             res.status(204).send();
-        
         }
     } else {
         res.status(400).send({
