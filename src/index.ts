@@ -13,7 +13,7 @@ interface Parameters {
     arch: string;
 }
 
-app.get('/update', async (req: Request<{}, {}, {}, Parameters>, res: Response) => {
+app.get('/', async (req: Request<{}, {}, {}, Parameters>, res: Response) => {
     if (req.query.current_version && req.query.target && req.query.arch) {
         const releases = await github();
         const latest = releases.find((release) => {
