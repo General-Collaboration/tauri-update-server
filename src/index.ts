@@ -36,4 +36,4 @@ app.get('/update', async (req: Request<{}, {}, {}, Parameters>, res: Response) =
         });
     }
 });
-app.listen(8080, '0.0.0.0', () => console.log(`Server started at http://0.0.0.0:8080/`));
+app.listen(parseInt(process.env.PORT, 10) || 8080, '0.0.0.0', () => console.log(`Server started at http://0.0.0.0:8080/`));
